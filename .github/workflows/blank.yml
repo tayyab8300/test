@@ -1,0 +1,35 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Windows-CRD
+
+on: 
+  workflow_dispatch:
+    inputs:
+      authcode:
+        description: 'Enter CRD code'
+        required: true
+      pincode:
+        description: 'Six digit Pin'
+        required: true
+  
+jobs:
+  build:
+    runs-on: windows-2022-with-16-gb-ram
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Initializing Setup
+      run: ./setup.ps1
+    - name: Starting CRD 
+      run: ${{ github.event.inputs.authcode }} -pin=${{ github.event.inputs.pincode }}
+    - name: Ensure RDP session runs for 12 hours
+      run: |
+        echo "Start time: $(date)"
+        sleep 43200
+        echo "End time: $(date)"
+    - name: Keep Alive
+      run: ./timeout.ps1
+
+  
+    
+
